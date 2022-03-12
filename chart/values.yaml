@@ -1,0 +1,7 @@
+image:
+  repository: node
+  tag: 14-slim
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""

@@ -1,0 +1,4 @@
+# -*- mode: Python -*
+
+k8s_yaml('kubernetes.yaml')
+k8s_resource('nginx', port_forwards=8000)

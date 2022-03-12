@@ -4,47 +4,35 @@ Kubernetes sample project
 
 ## Prerequisites
 
+- Rancher Desktop (https://rancherdesktop.io/)
+- Tilt (https://tilt.dev/)
+
+## Plain Kubernetes Demo
+
 ```bash
-brew install hyperkit
-brew install docker
-brew install kubectl
-brew install minikube
+cd k8s-simple-demo
+# Start Kubernetes cluster
+tilt up
+# Delete resources
+tilt down
 ```
 
-## Setup
+## Helm Chart Demo
 
 ```bash
-# setup minikube
-minikube config set driver hyperkit
-minikube config set cpus 2
-minikube config set memory 8g
-# start minikube on VM
-minikube start 
-# set up docker path
-eval $(minikube docker-env)
-# start (wait for a while...)
-make start
-# stop
-make stop
+tilt up
+tilt down
 ```
 
 ## Useful Commands
 
 ```bash
-# check minikube status
-minikube status
-# access minikube dashboard
-minikube dashboard
-# stop minikube
-minikube stop
-# delete minikube
-minikube delete
-# check minikube logs
-minikube logs --problems
+# get kubectl context
+kubectl config get-contexts
+# view kubectl configuration
+kubectl config view
 # get pods
 kubectl get pods
 # check events
 kubectl get events
-# view kubectl configuration
-kubectl config view
 ```
