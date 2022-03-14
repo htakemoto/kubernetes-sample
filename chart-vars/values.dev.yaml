@@ -1,0 +1,4 @@
+# This overrides chart/values.yaml
+
+ingress:
+  enabled: false

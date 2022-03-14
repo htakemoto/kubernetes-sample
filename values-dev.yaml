@@ -1,6 +1,0 @@
-image:
-  repository: app-local
-  tag: latest
-  pullPolicy: Never
-
-restartPolicy: Never

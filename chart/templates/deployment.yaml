@@ -3,26 +3,38 @@ kind: Deployment
 metadata:
   name: {{ include "chart.fullname" . }}
   labels:
-    # The "app.kubernetes.io/managed-by" label is used to track which tool deployed a given chart.
-    # It is useful for admins who want to see what releases a particular tool
-    # is responsible for.
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    # The "app.kubernetes.io/instance" convention makes it easy to tie a release to all of the
-    # Kubernetes resources that were created as part of that release.
-    app.kubernetes.io/instance: {{ .Release.Name | lower | quote }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-    # This makes it easy to audit chart usage.
-    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    {{- include "chart.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      app: {{ include "chart.fullname" . }}
+      {{- include "chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ include "chart.fullname" . }}
+        {{- include "chart.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-      - name: main
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+      # frontend
+      - name: {{ include "chart.fullname" . }}-frontend
+        image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+        imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.frontend.container.port }}
+        env:
+        - name: REACT_APP_API_URI
+          value: http://localhost:{{ .Values.backend.container.port }}
+      # backend
+      - name: {{ include "chart.fullname" . }}-backend
+        image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+        imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.backend.container.port }}
+        env:
+        - name: DB_HOST
+          value: {{ .Values.postgresql.fullnameOverride }}
+        - name: DB_DATABASE
+          value: {{ .Values.postgresql.auth.database }}
+        - name: DB_USERNAME
+          value: {{ .Values.postgresql.auth.username }}
+        - name: DB_PASSWORD
+          value: {{ .Values.postgresql.auth.password }}

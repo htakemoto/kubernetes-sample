@@ -17,12 +17,19 @@ tilt up
 tilt down
 ```
 
+note: `k8s-simple-demo/kubernetes.yaml` is applied
+
 ## Helm Chart Demo
 
 ```bash
+helm repo list
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm dep update ./chart
 tilt up
 tilt down
 ```
+
+note: `helm template -f ./chart-vars/values-dev.yaml ./chart` is applied
 
 ## Useful Commands
 
@@ -33,6 +40,10 @@ kubectl config get-contexts
 kubectl config view
 # get pods
 kubectl get pods
+# get pods in detail
+kubectl get pods -n kube-system -o wide
 # check events
 kubectl get events
+# check log
+kubectl logs -n <Namespace> <Pod Name>
 ```

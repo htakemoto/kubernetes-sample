@@ -1,7 +1,54 @@
-image:
-  repository: node
-  tag: 14-slim
-  pullPolicy: IfNotPresent
-
 nameOverride: ""
 fullnameOverride: ""
+
+frontend:
+  image:
+    repository: htakemoto/kubernetes-sample-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+    env:
+      API_HOST: localhost:5000
+  container:
+    port: 3000
+  service:
+    port: 3000
+
+backend:
+  image:
+    repository: htakemoto/kubernetes-sample-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  container:
+    port: 5000
+  service:
+    port: 5000
+
+# bitnami/postgresql
+# Ref: https://artifacthub.io/packages/helm/bitnami/postgresql
+postgresql:
+  enabled: true
+  fullnameOverride: postgres
+  auth:
+    username: postgres
+    password: postgres
+    database: localdb
+  primary:
+    persistence:
+      enabled: false
+    initdb:
+      scripts:
+        init.sql: |
+          CREATE SCHEMA demo;
+          CREATE TABLE demo.users (
+            id SERIAL PRIMARY KEY,
+            username TEXT NOT NULL,
+            email TEXT NOT NULL
+          );
+          INSERT INTO demo.users (username, email)
+          VALUES ('jerry', 'jerry@example.com'), ('george', 'george@example.com');
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: false

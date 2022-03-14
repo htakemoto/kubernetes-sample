@@ -1,0 +1,5 @@
+# -*- mode: Python -*-
+
+load('ext://tests/javascript', 'test_jest_npm')
+
+test_jest_npm('frontend-unit-tests', './apps/frontend')
